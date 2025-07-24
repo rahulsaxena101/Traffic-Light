@@ -1,0 +1,55 @@
+
+#include <reg51.h>
+
+// Define signal pins
+sbit R1G = P2^0;
+sbit R1Y = P2^1;
+sbit R1R = P2^2;
+
+sbit R2G = P2^3;
+sbit R2Y = P2^4;
+sbit R2R = P2^5;
+
+sbit R3G = P2^6;
+sbit R3Y = P2^7;
+sbit R3R = P3^0;
+
+sbit R4G = P3^1;
+sbit R4Y = P3^2;
+sbit R4R = P3^3;
+
+void delay(unsigned int time_ms)
+{
+    unsigned int i, j;
+    for(i = 0; i < time_ms; i++)
+    for(j = 0; j < 1275; j++);
+}
+
+void clear_all() {
+    R1G = R1Y = R1R = 0;
+    R2G = R2Y = R2R = 0;
+    R3G = R3Y = R3R = 0;
+    R4G = R4Y = R4R = 0;
+}
+
+void signal_cycle(sbit G, sbit Y, sbit R) {
+    R = 0;   // Turn off red first
+    G = 1;   // Green on
+    delay(10000); // 10s
+    G = 0;   // Green off
+    Y = 1;   // Yellow on
+    delay(2000);  // 2s
+    Y = 0;   // Yellow off
+    R = 1;   // Red on
+}
+
+void main() {
+    while(1) {
+        clear_all(); R1R=R2R=R3R=R4R=1;  // All red at start for safety
+
+        signal_cycle(R1G, R1Y, R1R);
+        signal_cycle(R2G, R2Y, R2R);
+        signal_cycle(R3G, R3Y, R3R);
+        signal_cycle(R4G, R4Y, R4R);
+    }
+}
